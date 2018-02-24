@@ -14,7 +14,7 @@ But it should work with w7 also.
 
 
 * Mute menu (press F5).
-* Fixed teleporting, it works much better.
+* Fixed teleporting, it works much better
 
 
 ## Options
