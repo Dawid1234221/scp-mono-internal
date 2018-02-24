@@ -1,3 +1,6 @@
+![Screenshot](https://i.imgur.com/pMg8Tjo.jpg)
+
+
 # Support
 
 I checked this only with Windows 10.
