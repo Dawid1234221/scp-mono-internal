@@ -225,11 +225,12 @@ namespace ExampleAssembly
 
         private void OnGUI()
         {
-            UnityEngine.GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.6");
-            UnityEngine.GUI.Label(new UnityEngine.Rect(10, 50, 500, 30), "Show Friends: " + (showFriends ? "ON" : "OFF"));
-            UnityEngine.GUI.Label(new UnityEngine.Rect(10, 70, 500, 40), "Show Items: " + (showItems == 0 ? "OFF" : (showItems == 1 ? "Cards" : (showItems == 2 ? "Ammo" : (showItems == 3 ? "Weapons" : "ALL")))));
-            UnityEngine.GUI.Label(new UnityEngine.Rect(10, 90, 500, 50), "Noclip: " + (isNoclip ? "ON" : "OFF"));
-            UnityEngine.GUI.Label(new UnityEngine.Rect(500, 30, 500, 50), "MUTE: " + (MUTE ? "ON" : "OFF"));
+            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.7");
+            GUI.Label(new UnityEngine.Rect(10, 50, 500, 30), "Show Friends: " + (showFriends ? "ON" : "OFF"));
+            GUI.Label(new UnityEngine.Rect(10, 70, 500, 40), "Show Items: " + (showItems == 0 ? "OFF" : (showItems == 1 ? "Cards" : (showItems == 2 ? "Ammo" : (showItems == 3 ? "Weapons" : "ALL")))));
+            GUI.Label(new UnityEngine.Rect(10, 90, 500, 50), "Noclip: " + (isNoclip ? "ON" : "OFF"));
+            // UnityEngine.GUI.Label(new UnityEngine.Rect(500, 30, 500, 50), "MUTE: " + (MUTE ? "ON" : "OFF"));
+            GUI.Label(new UnityEngine.Rect(500, 30, 500, 50), "Menu: F5");
 
             Update();
             /*
@@ -281,6 +282,7 @@ namespace ExampleAssembly
             }*/
 
             GameObject[] array = GameObject.FindGameObjectsWithTag("Player");
+            updateMuteMenu(array);
             CharacterClassManager myClassManager = localPlayer.GetComponent<CharacterClassManager>();
             WeaponManager myWeapon = localPlayer.GetComponent<WeaponManager>();
             if (myWeapon != null)
@@ -357,7 +359,7 @@ namespace ExampleAssembly
                 if (chaseTarget != null)
                 {
                     Vector3 posed = chaseTarget.transform.position;
-                    posed.y += 2f;
+                    //posed.y += 2f; = v0.7 change
                     localPlayer.transform.position = posed;
                 }
             }
@@ -830,5 +832,235 @@ namespace ExampleAssembly
                 component4.SetAlpha(this.transparency);
             }
         }*/
+
+        private bool isMenuOpen = false;
+        private bool isKeyMenuPressed = false;
+        private KeyCode keyMenuOpen = KeyCode.F5;
+        //private string[] playerNames = { "TestName1", "TestName2", "TestName8", "TestName22", "TestName66", "TestName12", "TestName2", "GoodHash", "GoodHashNash", "hckd", "Player", "NoobIvan" };
+        //private bool[] isPlayerMuted = new bool[322/*maxPlayers?*/];
+        private int menuPage = 0;
+        private bool onNextPage = false;
+        private bool onBackPage = false;
+        private bool onExit = false;
+        private bool[] isKeyDown = new bool[10];
+
+        private enum MenuType
+        {
+            MAIN,
+            MUTE,
+            TEST
+        };
+        private MenuType menuType = MenuType.MAIN;
+
+        private void updateMuteMenu(GameObject[] playerList)
+        {
+            GUI.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+            // Key OPEN or CLOSE MENU
+            if (Input.GetKeyDown(keyMenuOpen))
+            {
+                if (!isKeyMenuPressed)
+                {
+                    isKeyMenuPressed = true;
+                    isMenuOpen = !isMenuOpen;
+
+                }
+            }
+            else if (isKeyMenuPressed && Input.GetKeyUp(keyMenuOpen))
+                isKeyMenuPressed = false;
+
+            if (!isMenuOpen)
+                return;
+
+            // Key EXIT
+            if (!isKeyDown[0] && menuType == MenuType.MAIN)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha0))
+                {
+                    isKeyDown[0] = true;
+                    isMenuOpen = false;
+                }
+            }
+            else if (isKeyDown[0] && Input.GetKeyUp(KeyCode.Alpha0))
+                isKeyDown[0] = false;
+
+            if (!isMenuOpen)
+                return;
+
+            // Key BACK
+            if (!isKeyDown[8])
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha8))
+                {
+                    isKeyDown[8] = true;
+                    if (menuPage > 0) menuPage--;
+                }
+            }
+            else if (isKeyDown[8] && Input.GetKeyUp(KeyCode.Alpha8))
+                isKeyDown[8] = false;
+
+            int playersCount = playerList.Length;
+
+            // Key NEXT
+            if (!isKeyDown[9])
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha9))
+                {
+                    isKeyDown[9] = true;
+                    if (menuPage < playersCount / 7)
+                        menuPage++;
+                }
+            }
+            else if (isKeyDown[9] && Input.GetKeyUp(KeyCode.Alpha9))
+                isKeyDown[9] = false;
+
+            // Show menu
+
+            // If current menu is 'MuteMenu' - show players
+            if (menuType == MenuType.MUTE)
+            {
+                //int pageLimiter = menuPage * 7;
+                int perPage = 7;
+                int currentPage = menuPage;
+
+                //if (playersCount > perPage) playersCount = perPage;
+                //if(playersCount/perPage>)
+                int maxPages = playersCount / 7;
+
+                if (playersCount / 7 < currentPage)
+                {
+                    currentPage = playersCount / 7;
+                }
+
+                // 'MENU TITLE'
+                GUI.Label(new Rect(10, 120, 500, 50), "Mute menu; Page:" + menuPage + " of " + maxPages);
+
+                int keyNum = 0;
+                // 'ADD NAMES'
+                /*for (int i = 0; i < array.Length; i++)
+                {
+                    GameObject gameObject = array[i];
+                    if (gameObject.GetComponent<NetworkIdentity>())
+                    {
+                        NicknameSync _component = gameObject.transform.GetComponent<NicknameSync>();
+                        CharacterClassManager ClassManager = _component.GetComponent<CharacterClassManager>();
+                        if (_component != null)
+                        {
+                            NetworkIdentity netcomponent = gameObject.GetComponent<NetworkIdentity>();
+                            if (netcomponent.isLocalPlayer) continue;
+                            GameObject voice = GameObject.Find("Player " + gameObject.GetComponent<HlapiPlayer>().PlayerId + " voice comms");
+                            if (voice != null && MUTE)
+                            {
+                                voice.GetComponent<UnityEngine.AudioSource>().mute = true;
+                                // UnityEngine.GUI.Label(new UnityEngine.Rect(500, 30 + 10 * i, 900, 20), nickname + " voice: " + voice.GetComponent<UnityEngine.AudioSource>().volume.ToString());
+                            }
+                            //UnityEngine.GUI.Label(new UnityEngine.Rect(500, 30 + 10 * i, 900, 20), nickname + " voice: OFF");
+                        }
+                    }
+                }*/
+                for (int i = perPage * currentPage; i < perPage * (currentPage + 1); i++)
+                {
+                    if (i >= playersCount) continue;
+
+                    GameObject gameObject = playerList[i];
+                    if (gameObject.GetComponent<NetworkIdentity>())
+                    {
+                        NicknameSync _component = gameObject.transform.GetComponent<NicknameSync>();
+                        CharacterClassManager ClassManager = _component.GetComponent<CharacterClassManager>();
+                        if (_component != null)
+                        {
+                            NetworkIdentity netcomponent = gameObject.GetComponent<NetworkIdentity>();
+                            if (netcomponent.isLocalPlayer) continue;
+                            GameObject voice = GameObject.Find("Player " + gameObject.GetComponent<HlapiPlayer>().PlayerId + " voice comms");
+                            bool muted = false;
+                            if (voice != null)
+                            {
+                                if (voice.GetComponent<UnityEngine.AudioSource>().mute) muted = true;
+                                // voice.GetComponent<UnityEngine.AudioSource>().mute = true;
+                            }
+                            string nickname = _component.myNick;
+
+                            string menuText = (keyNum + 1) + " - [id:" + i + menuPage * 7 + "] " + nickname + "; muted:" + (muted ? "ON" : "OFF");
+                            GUI.Label(new Rect(10, 140 + 20 * keyNum, 500, 50), menuText);
+
+                            if (!isKeyDown[keyNum])
+                            {
+                                if (Input.GetKeyDown(KeyCode.Alpha1 + (keyNum)))
+                                {
+                                    isKeyDown[keyNum] = true;
+                                    // remutePlayer(i);
+                                    if (muted) voice.GetComponent<UnityEngine.AudioSource>().mute = false;
+                                    else voice.GetComponent<UnityEngine.AudioSource>().mute = true;
+                                    break;
+                                }
+                            }
+                            else if (isKeyDown[keyNum] && Input.GetKeyUp(KeyCode.Alpha1 + (keyNum)))
+                            {
+                                isKeyDown[keyNum] = false;
+                            }
+                            keyNum++;
+                        }
+                    }
+                }
+
+
+                // 'MENU POST ITEMS'
+                GUI.Label(new Rect(10, 140 + 20 * 8, 500, 50), "8 - Back Page");
+                GUI.Label(new Rect(10, 140 + 20 * (8 + 1), 500, 50), "9 - Next Page");
+                GUI.Label(new Rect(10, 140 + 20 * (8 + 2), 500, 50), "0 - Back to Main");
+
+                if (!isKeyDown[0])
+                {
+                    if (Input.GetKeyDown(KeyCode.Alpha0))
+                    {
+                        isKeyDown[0] = true;
+                        menuType = MenuType.MAIN;
+                    }
+                }
+                else if (isKeyDown[0] && Input.GetKeyUp(KeyCode.Alpha0))
+                    isKeyDown[0] = false;
+
+            }
+            else
+            if (menuType == MenuType.MAIN)
+            {
+                // 'MENU TITLE'
+                GUI.Label(new Rect(10, 120, 500, 50), "Mute menu; Page:" + menuPage);
+
+                // Item1 - open Mute Menu
+                GUI.Label(new UnityEngine.Rect(10, 140, 500, 50), "1 - Mute Menu");
+                if (!isKeyDown[1])
+                {
+                    if (Input.GetKeyDown(KeyCode.Alpha1))
+                    {
+                        isKeyDown[1] = true;
+                        menuType = MenuType.MUTE;
+                        menuPage = 0;
+                    }
+                }
+                else if (isKeyDown[1] && Input.GetKeyUp(KeyCode.Alpha1))
+                    isKeyDown[1] = false;
+
+                // Item2 - open ESP Menu
+                GUI.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+                GUI.Label(new UnityEngine.Rect(10, 160, 500, 50), "2 - ESP [NOT WORKING]");
+                // Coming soon....
+
+                // Item0 - exit key
+                GUI.color = new Color(1.0f, 1.0f, 1.0f, 1f);
+                GUI.Label(new UnityEngine.Rect(10, 180, 500, 50), "0 - Exit");
+
+                if (!isKeyDown[0])
+                {
+                    if (Input.GetKeyDown(KeyCode.Alpha0))
+                    {
+                        isKeyDown[0] = false;
+                        isMenuOpen = false;
+                    }
+                }
+                else if (isKeyDown[0] && Input.GetKeyUp(KeyCode.Alpha0))
+                    isKeyDown[0] = false;
+            }
+        }
     }
 }
