@@ -162,12 +162,28 @@ namespace ExampleAssembly
 
             if (Input.GetKeyDown(KeyCode.KeypadPlus))
             {
-                MUTE = false;
+                //.FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>(), 20, Camera.main.transform.position);
+                //Scp914_Controller da = UnityEngine.Object.FindObjectOfType<Scp914_Controller>();
+                //da.CallCmdSetupPickup(FindObjectOfType<Pickup>(), 20, Camera.main.transform.position);
+                FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>().ToString(), 20, Camera.main.transform.position);
             }
 
             if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                MUTE = true;
+                FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>().ToString(), 22, Camera.main.transform.position);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Keypad9))
+            {
+                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(2);
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad8))
+            {
+                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(1);
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad7))
+            {
+                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(0);
             }
 
         }
@@ -465,14 +481,16 @@ namespace ExampleAssembly
 
             if (isAimbot && aimTarget != Vector3.zero)
             {
-                //myWeapon.transform.LookAt(aimTarget);
+                myWeapon.transform.LookAt(aimTarget);
+
                 for (int i = 0; i < myWeapon.weapons.Length; i++)
                 {
-                    // myWeapon.weapons[i].weaponCamera.transform.LookAt(aimTarget);
-                    // myWeapon.weapons[i].gunAim;
-                    // WeaponManager.Weapon.GameObject wcam = weapon.weaponCamera;
-                    // weapon.weaponCamera.transform.LookAt(aimTarget);
-                    mainCam.transform.LookAt(aimTarget);
+                    myWeapon.weapons[i].weaponCamera.transform.LookAt(aimTarget);
+
+                    //myWeapon.weapons[i].gunAim;
+                    //WeaponManager.Weapon wcam = weapon.weaponCamera;
+                    //weapon.weaponCamera.transform.LookAt(aimTarget);
+                    //mainCam.transform.LookAt(aimTarget);
                 }
             }
 
