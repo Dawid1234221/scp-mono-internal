@@ -10,6 +10,17 @@ But it should work with w7 also.
 
 # Changelog
 
+
+### V0.8
+
+
+* Num7 = Respawn as class D
+* Num8 = Respawn as SCP 173
+* Num9 = Dead but you will be 100% respawned ASAP.
+* But keep in mind that respawn works OK only if you was alive. It will make you invisible and unable to damage players \ open doors \ etc if you was dead.
+* Compiled hack uploaded (for quickstart)
+
+
 ### V0.7
 
 
