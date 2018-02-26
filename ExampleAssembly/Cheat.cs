@@ -241,7 +241,7 @@ namespace ExampleAssembly
 
         private void OnGUI()
         {
-            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.7");
+            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.8");
             GUI.Label(new UnityEngine.Rect(10, 50, 500, 30), "Show Friends: " + (showFriends ? "ON" : "OFF"));
             GUI.Label(new UnityEngine.Rect(10, 70, 500, 40), "Show Items: " + (showItems == 0 ? "OFF" : (showItems == 1 ? "Cards" : (showItems == 2 ? "Ammo" : (showItems == 3 ? "Weapons" : "ALL")))));
             GUI.Label(new UnityEngine.Rect(10, 90, 500, 50), "Noclip: " + (isNoclip ? "ON" : "OFF"));
