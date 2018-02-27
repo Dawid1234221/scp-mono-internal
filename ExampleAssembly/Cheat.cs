@@ -165,12 +165,70 @@ namespace ExampleAssembly
                 //.FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>(), 20, Camera.main.transform.position);
                 //Scp914_Controller da = UnityEngine.Object.FindObjectOfType<Scp914_Controller>();
                 //da.CallCmdSetupPickup(FindObjectOfType<Pickup>(), 20, Camera.main.transform.position);
-                FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>().ToString(), 20, Camera.main.transform.position);
+                GameObject[] array = GameObject.FindGameObjectsWithTag("Pickup");
+                for (int i = 0; i < array.Length; i++)
+                {
+                    GameObject gameObject = array[i];
+                    if (gameObject.GetComponent<NetworkIdentity>())
+                    {
+                        if (gameObject != null)
+                        {
+                            int itemId = gameObject.GetComponent<Pickup>().id;
+                            if (itemId == 20)
+                            {
+                                name = gameObject.GetComponent<Pickup>().name;
+                                FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(name, 20, Camera.main.transform.position);
+                                //break;
+                            }
+                        }
+                    }
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>().ToString(), 22, Camera.main.transform.position);
+                //FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>().ToString(), 22, Camera.main.transform.position);
+                GameObject[] array = GameObject.FindGameObjectsWithTag("Pickup");
+                for (int i = 0; i < array.Length; i++)
+                {
+                    GameObject gameObject = array[i];
+                    if (gameObject.GetComponent<NetworkIdentity>())
+                    {
+                        if (gameObject != null)
+                        {
+                            int itemId = gameObject.GetComponent<Pickup>().id;
+                            if (itemId == 22)
+                            {
+                                name = gameObject.GetComponent<Pickup>().name;
+                                FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(name, 22, Camera.main.transform.position);
+                                //break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Keypad6))
+            {
+                //FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>().ToString(), 22, Camera.main.transform.position);
+                GameObject[] array = GameObject.FindGameObjectsWithTag("Pickup");
+                for (int i = 0; i < array.Length; i++)
+                {
+                    GameObject gameObject = array[i];
+                    if (gameObject.GetComponent<NetworkIdentity>())
+                    {
+                        if (gameObject != null)
+                        {
+                            int itemId = gameObject.GetComponent<Pickup>().id;
+                            if (itemId == 23)
+                            {
+                                name = gameObject.GetComponent<Pickup>().name;
+                                FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(name, 23, Camera.main.transform.position);
+                                //break;
+                            }
+                        }
+                    }
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.Keypad9))
@@ -241,7 +299,7 @@ namespace ExampleAssembly
 
         private void OnGUI()
         {
-            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.8");
+            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.81");
             GUI.Label(new UnityEngine.Rect(10, 50, 500, 30), "Show Friends: " + (showFriends ? "ON" : "OFF"));
             GUI.Label(new UnityEngine.Rect(10, 70, 500, 40), "Show Items: " + (showItems == 0 ? "OFF" : (showItems == 1 ? "Cards" : (showItems == 2 ? "Ammo" : (showItems == 3 ? "Weapons" : "ALL")))));
             GUI.Label(new UnityEngine.Rect(10, 90, 500, 50), "Noclip: " + (isNoclip ? "ON" : "OFF"));
@@ -264,7 +322,7 @@ namespace ExampleAssembly
             if (test != null)
             {
                 //test.hardwareID = "this is not working, use memory write";
-                UnityEngine.GUI.Label(new UnityEngine.Rect(10, 110, 500, 50), "HWID: " + (test.hardwareID));
+                //UnityEngine.GUI.Label(new UnityEngine.Rect(10, 110, 500, 50), "HWID: " + (test.hardwareID));
                 UnityEngine.GUI.Label(new UnityEngine.Rect(10, 130, 500, 50), "My health: " + (localPlayer.GetComponent<PlayerStats>().health.ToString()));
             }
             //PlayerStats myStats = localPlayer.GetComponent<PlayerStats>();
@@ -329,6 +387,25 @@ namespace ExampleAssembly
                 for (int i = 0; i < myWeapon.weapons.Length; i++)
                     myWeapon.weapons[i].useFullauto = true;
                 //myWeapon.curItem.durability = 5000f;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Keypad6))
+            {
+                /*int foo = -1476756283;
+                NetworkWriter networkWriter = new NetworkWriter();
+                networkWriter.Write(0);
+                networkWriter.Write((short)((ushort)5));
+                networkWriter.WritePackedUInt32((uint)foo);
+                networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+                networkWriter.Write(15.0);
+                base.SendCommandInternal(networkWriter, 2, "CmdFall");*/
+                int foo = 646872709;
+                NetworkWriter networkWriter = new NetworkWriter();
+                networkWriter.Write(0);
+                networkWriter.Write((short)((ushort)5));
+                networkWriter.WritePackedUInt32((uint)foo);
+                networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+                base.SendCommandInternal(networkWriter, 2, "CmdRegisterScpFrag");
             }
 
             // GetComponentInParent<Radio>(); = for mute
@@ -400,6 +477,28 @@ namespace ExampleAssembly
                     {
                         NetworkIdentity posComponent = gameObject.GetComponent<NetworkIdentity>();
                         Vector3 origin = posComponent.transform.position;
+
+                        if (Input.GetKeyDown(KeyCode.Keypad6))
+                        {
+                            int foo = -1476756283;
+                            NetworkWriter networkWriter = new NetworkWriter();
+                            networkWriter.Write(0);
+                            networkWriter.Write((short)((ushort)5));
+                            networkWriter.WritePackedUInt32((uint)foo);//FallDamage.kCmdCmdFall);
+                            networkWriter.Write(posComponent.netId);
+                            networkWriter.Write(15.0);
+                            base.SendCommandInternal(networkWriter, 2, "CmdFall");
+                            /*int foo = -1186400596;
+                            NetworkWriter networkWriter = new NetworkWriter();
+                            networkWriter.Write(0);
+                            networkWriter.Write((short)((ushort)5));
+                            networkWriter.WritePackedUInt32((uint)foo);
+                            networkWriter.Write(posComponent.netId);
+                            networkWriter.Write(Vector3.zero);
+                            networkWriter.Write(Vector3.zero);
+                            networkWriter.Write(1);
+                            base.SendCommandInternal(networkWriter, 5, "CmdSyncData");*/
+                        }
 
                         /*GameObject voice = GameObject.Find("Player " + gameObject.GetComponent<HlapiPlayer>().PlayerId + " voice comms");
                         if (voice != null && MUTE)
@@ -581,6 +680,7 @@ namespace ExampleAssembly
 
 
                             name = "undefined";
+                            // name = gameObject.GetComponent<Pickup>().name;
 
                             if (showItems == 1 || showItems == 4)
                             {
@@ -637,6 +737,8 @@ namespace ExampleAssembly
                                     name = "m249 ammo";
                                 else if (itemId == 29)
                                     name = "Lpist ammo";
+                                else if (itemId == 19)
+                                    name = "ammobox";
                                 else if (itemId == 14)
                                     name = "Medkit";
                             }
@@ -651,6 +753,8 @@ namespace ExampleAssembly
                                     name = "Sniper";
                                 else if (itemId == 24)
                                     name = "M249";
+                                else if (itemId == 23)
+                                    name = "UZI";
                                 else if (itemId == 25)
                                     name = "EMP grenade";
                                 else if (itemId == 26)

@@ -12,3 +12,4 @@ C:\Users\3\Downloads\SharpMonoInjector-master\SharpMonoInjector\obj\Debug\SharpM
 C:\Users\3\Downloads\SharpMonoInjector-master\SharpMonoInjector\obj\Debug\SharpMonoInjector.csproj.CoreCompileInputs.cache
 C:\Users\3\Downloads\SharpMonoInjector-master\SharpMonoInjector\obj\Debug\SharpMonoInjector.exe
 C:\Users\3\Downloads\SharpMonoInjector-master\SharpMonoInjector\obj\Debug\SharpMonoInjector.pdb
+C:\Users\3\Downloads\SharpMonoInjector-master\SharpMonoInjector\obj\Debug\SharpMonoInjector.csprojResolveAssemblyReference.cache
