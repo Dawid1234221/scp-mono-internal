@@ -160,7 +160,7 @@ namespace ExampleAssembly
                 chaseTP = 5;
             }
 
-            if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            /*if (Input.GetKeyDown(KeyCode.KeypadPlus))
             {
                 //.FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>(), 20, Camera.main.transform.position);
                 //Scp914_Controller da = UnityEngine.Object.FindObjectOfType<Scp914_Controller>();
@@ -206,9 +206,9 @@ namespace ExampleAssembly
                         }
                     }
                 }
-            }
+            }*/
 
-            if (Input.GetKeyDown(KeyCode.Keypad6))
+            /*if (Input.GetKeyDown(KeyCode.Keypad6))
             {
                 //FindObjectOfType<Scp914_Controller>().CallCmdSetupPickup(FindObjectOfType<Pickup>().ToString(), 22, Camera.main.transform.position);
                 GameObject[] array = GameObject.FindGameObjectsWithTag("Pickup");
@@ -229,7 +229,7 @@ namespace ExampleAssembly
                         }
                     }
                 }
-            }
+            }*/
 
             if (Input.GetKeyDown(KeyCode.Keypad9))
             {
@@ -299,7 +299,7 @@ namespace ExampleAssembly
 
         private void OnGUI()
         {
-            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.81");
+            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.82");
             GUI.Label(new UnityEngine.Rect(10, 50, 500, 30), "Show Friends: " + (showFriends ? "ON" : "OFF"));
             GUI.Label(new UnityEngine.Rect(10, 70, 500, 40), "Show Items: " + (showItems == 0 ? "OFF" : (showItems == 1 ? "Cards" : (showItems == 2 ? "Ammo" : (showItems == 3 ? "Weapons" : "ALL")))));
             GUI.Label(new UnityEngine.Rect(10, 90, 500, 50), "Noclip: " + (isNoclip ? "ON" : "OFF"));
