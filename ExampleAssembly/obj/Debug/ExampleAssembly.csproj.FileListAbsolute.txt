@@ -42,4 +42,3 @@ C:\Users\3\Downloads\SharpMonoInjector-master\ExampleAssembly\bin\Debug\UnityEng
 C:\Users\3\Downloads\SharpMonoInjector-master\ExampleAssembly\bin\Debug\UnityEngine.AudioModule.xml
 C:\Users\3\Downloads\SharpMonoInjector-master\ExampleAssembly\bin\Debug\UnityEngine.CoreModule.xml
 C:\Users\3\Downloads\SharpMonoInjector-master\ExampleAssembly\bin\Debug\UnityEngine.IMGUIModule.xml
-C:\Users\3\Downloads\SharpMonoInjector-master\ExampleAssembly\obj\Debug\ExampleAssembly.csprojResolveAssemblyReference.cache
