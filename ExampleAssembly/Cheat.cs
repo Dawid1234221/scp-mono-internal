@@ -244,7 +244,7 @@ namespace ExampleAssembly
             if (Input.GetKeyDown(KeyCode.Keypad9))
             {
                 // PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(2);
-                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(82);
+                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(82); // IN DEBUG
             }
             if (Input.GetKeyDown(KeyCode.Keypad8))
             {
@@ -496,7 +496,7 @@ namespace ExampleAssembly
                 }
             }
             if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hit)) { 
-                GUI.Label(new UnityEngine.Rect(Screen.width / 2, Screen.height / 2, 500, 150), "Tag:" + hit.transform.gameObject.tag + " recognized as " + RecognizeInteractable() + " and name is: " + hit.transform.gameObject.name);
+                //GUI.Label(new UnityEngine.Rect(Screen.width / 2, Screen.height / 2, 500, 150), "Tag:" + hit.transform.gameObject.tag + " recognized as " + RecognizeInteractable() + " and name is: " + hit.transform.gameObject.name);
             }
             if (interactableType == "door" || interactableType == "sdoor")
             {
@@ -631,13 +631,13 @@ namespace ExampleAssembly
 
         private void OnGUI()
         {
-            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.82");
+            GUI.Label(new UnityEngine.Rect(10, 30, 500, 20), "SCP Hack v0.9");
             GUI.Label(new UnityEngine.Rect(10, 50, 500, 30), "Show Friends: " + (showFriends ? "ON" : "OFF"));
             GUI.Label(new UnityEngine.Rect(10, 70, 500, 40), "Show Items: " + (showItems == 0 ? "OFF" : (showItems == 1 ? "Cards" : (showItems == 2 ? "Ammo" : (showItems == 3 ? "Weapons" : "ALL")))));
             GUI.Label(new UnityEngine.Rect(10, 90, 500, 50), "Noclip: " + (isNoclip ? "ON" : "OFF"));
             // UnityEngine.GUI.Label(new UnityEngine.Rect(500, 30, 500, 50), "MUTE: " + (MUTE ? "ON" : "OFF"));
             GUI.Label(new UnityEngine.Rect(500, 30, 500, 50), "Menu: F5");
-            GUI.Label(new UnityEngine.Rect(500, 40, 500, 70), "SCP 179 interactable: " + interactableType); 
+            //GUI.Label(new UnityEngine.Rect(500, 40, 500, 70), "SCP 179 interactable: " + interactableType); 
 
             Update();
             /*

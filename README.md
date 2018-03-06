@@ -11,11 +11,33 @@ But it should work with w7 also.
 # Changelog
 
 
+### V0.9
+
+
+Last changes in game:
+
+* Fixed fast shooting - **option removed from hack**
+* Fixed item spawning method (this hack didn't have one and will not as it fixed :) )
+* Fixed teleporting in most. You still can use intercom and teleport to your's class spawnpoint or exit pocket dimension through..
+
+Changes in hack:
+
+* Num6 = Change class (client-side) as SCP-(forgot number) - old man. (**EACH ABILITY IS WORKING IF YOU WAS ALIVE**)
+* Num7 = Change class (client-side) as SCP-079 (**PLEASE DON'T USE IT'S NOT WORKING AS EXPECTED**)
+* Num8 = Change class (client-side) as 1
+* Num9 = Change class (client-side) as *too big for any class* (I'm not shure but sometimes that makes you invisible)
+
+*So you can switch to OLD MAN SCP, go through the doors, teleport. And then switch back to class-D to use gun or pick item up.*
+
+* Keyboard-1 = Force interaction command (works about 30% longer VS usual E). **works only with doors for now**
+* Keyboard-2 = Force door block (from SCP-073) but that has no effect or I missed something..
+
+
 ### V0.8
 
 
 * Num7 = Respawn as class D
-* Num8 = Respawn as SCP 173
+* Num8 = Respawn as SCP 073
 * Num9 = Dead but you will be 100% respawned ASAP.
 * But keep in mind that respawn works OK only if you was alive. It will make you invisible and unable to damage players \ open doors \ etc if you was dead.
 * Compiled hack uploaded (for quickstart)
