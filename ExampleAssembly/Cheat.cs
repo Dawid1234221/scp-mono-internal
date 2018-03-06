@@ -23,6 +23,16 @@ namespace ExampleAssembly
 
     public class Cheat : NetworkBehaviour //UnityEngine.MonoBehaviour
     {
+        // SCP 173
+        private GameObject interactable;
+        private string interactableType = "unclassified";
+        private RaycastHit hit;
+        private string liftID;
+        public LayerMask cameraMask;
+        public GameObject[] bannedDoors;
+
+
+
         private Texture2D pixel;
 
         [Header("Player Properties")]
@@ -233,17 +243,339 @@ namespace ExampleAssembly
 
             if (Input.GetKeyDown(KeyCode.Keypad9))
             {
-                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(2);
+                // PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(2);
+                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(82);
             }
             if (Input.GetKeyDown(KeyCode.Keypad8))
             {
                 PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(1);
             }
+            if (Input.GetKeyDown(KeyCode.Keypad6))
+            {
+                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(3);
+            }
             if (Input.GetKeyDown(KeyCode.Keypad7))
             {
-                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(0);
+                PlayerManager.localPlayer.GetComponent<CharacterClassManager>().SetClassID(7); // COMPUTER SCP!
+                PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().iAm079 = true;
             }
 
+            /*if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                // PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().UseElevator();
+                if (Physics.Raycast(this.cam.ScreenPointToRay(Input.mousePosition), out this.hit))
+                {
+                    this.interactable = this.hit.transform.gameObject;
+                    this.interactableType = this.RecognizeInteractable();
+                }
+                PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().Interact();
+            }*/
+
+
+            // HERE SCP 179 COMES
+            /*
+             * this.CheckForInput();
+             * this.UpdateInteraction();
+             * this.MoveCamera();
+             * this.FovRelation();
+             * this.DeductLockDown();
+             */
+
+            // CheckForInput
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                Interact();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                //StopInteracting();
+                FreezeInteracting();
+            }
+            UpdateInteraction();
+        }
+
+        public void RpcMoveBack(Vector3 pos)
+        {
+            //
+        }
+
+        private void FreezeInteracting()
+        {
+            if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hit))
+            {
+                interactable = hit.transform.gameObject;
+                interactableType = RecognizeInteractable();
+                if (interactableType == "door")
+                {
+                    //PlyMovementSync moves = PlayerManager.localPlayer.GetComponent<PlyMovementSync>();
+                    //moves.Networkposition = hit.transform.GetComponentInParent<Door>().gameObject.transform.position;
+                    //moves.CallCmdSyncData(0f, hit.transform.GetComponentInParent<Door>().gameObject.transform.position, 0f);
+                    GameObject door = hit.transform.GetComponentInParent<Door>().gameObject;
+                    // door.SetActive(false);
+                    // PlayerManager.localPlayer.GetComponent<PlayerInteract>().CallRpcDenied(door);
+                    NetworkWriter networkWriter = new NetworkWriter();
+                    networkWriter.Write(0);
+                    networkWriter.Write((short)((ushort)2));
+                    //networkWriter.WritePackedUInt32((uint)PlayerInteract.kRpcRpcDenied);
+                    int foo = -1136563096;
+                    networkWriter.WritePackedUInt32((uint)foo);
+                    networkWriter.Write(0);
+                    networkWriter.Write(door);
+                    SendRPCInternal(networkWriter, 14, "RpcDenied");
+                    //door.SetActive(false);
+                    /*Door[] array2 = FindObjectsOfType<Door>();
+                    for (int i = 0; i < array2.Length; i++)
+                    {
+                        //if (array2[i] == interactable)
+                        if (Vector3.Distance(array2[i].transform.position, interactable.transform.position) < 3f)
+                        {
+                            Door door = array2[i];
+                            //door.ChangeState();
+                            Console_LockDoor();
+                            door.ForceCooldown(5f);
+                            StopInteracting();
+                            break;
+                        }
+                    }*/
+                }
+                //Console_LockDoor();
+                //StopInteracting();
+                //GUI.Label(new UnityEngine.Rect(500, 50, 500, 150), "SCP 179 item: DA, tag:" + hit.transform.gameObject.tag + " recognized as " + interactableType);
+                //GameObject door = (!(this.interactableType == "door")) ? GameObject.Find(this.interactable.name.Remove(this.interactable.name.IndexOf("-"))) : this.interactable;
+                //GameObject door = (!(this.interactableType == "door")) ? GameObject.Find(hit.transform.gameObject.name.Remove(hit.transform.gameObject.name.IndexOf("-"))) : hit.transform.gameObject;
+                // PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().CallCmdOpenDoor(interactable);
+                //Door d = (Door) hit.transform.gameObject;
+                // interactable = this.hit.transform.GetComponentInParent<CCTV_Camera>().gameObject;
+            }
+            //else if (Physics.Raycast(this.cam.ScreenPointToRay(Input.mousePosition), out this.hit))
+            //else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+            else if (Physics.Raycast(new Ray(this.spectCam.position, this.spectCam.forward), out hit))
+            {
+                //GUI.Label(new UnityEngine.Rect(500, 50, 500, 150), "SCP 179 item: DA2");
+                interactable = hit.transform.gameObject;
+                interactableType = RecognizeInteractable();
+                this.Console_LockDoor();
+                this.StopInteracting();
+            }
+        }
+
+        private void Interact()
+        {
+            //RaycastHit raycastHit;
+            //if (Physics.Raycast(new Ray(this.spectCam.position, this.spectCam.forward), out raycastHit, this.viewRange, this.raycastMask))
+
+            // if (Physics.Raycast(this.cam.ScreenPointToRay(Input.mousePosition), out this.hit, 50f, this.cameraMask))
+            //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 50f, cameraMask))
+            if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hit)) 
+            {
+                interactable = hit.transform.gameObject;
+                interactableType = RecognizeInteractable();
+                if (interactableType == "door")
+                {
+                    /*PlyMovementSync moves = PlayerManager.localPlayer.GetComponent<PlyMovementSync>();
+                    Vector3 currentPos = moves.Networkposition;
+                    moves.Networkposition = hit.transform.GetComponentInParent<Door>().gameObject.transform.position;
+                    moves.CallCmdSyncData(0f, hit.transform.GetComponentInParent<Door>().gameObject.transform.position, 0f);
+                    moves.CallCmdSyncData(0f, hit.transform.GetComponentInParent<Door>().gameObject.transform.position, 0f);
+                    moves.CallCmdSyncData(0f, hit.transform.GetComponentInParent<Door>().gameObject.transform.position, 0f);
+                    moves.CallCmdSyncData(0f, hit.transform.GetComponentInParent<Door>().gameObject.transform.position, 0f);
+                    moves.CallCmdSyncData(0f, hit.transform.GetComponentInParent<Door>().gameObject.transform.position, 0f);
+                    PlayerManager.localPlayer.GetComponent<PlayerInteract>().CallCmdOpenDoor(hit.transform.GetComponentInParent<Door>().gameObject);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);*/
+                    /*PlyMovementSync moves = PlayerManager.localPlayer.GetComponent<PlyMovementSync>();
+                    Vector3 currentPos = moves.Networkposition;
+                    moves.Networkposition = hit.transform.GetComponentInParent<Door>().gameObject.transform.position;
+                    moves.CallCmdSyncData(0f, hit.transform.GetComponentInParent<Door>().gameObject.transform.position, 0f);*/
+                    PlayerManager.localPlayer.GetComponent<PlayerInteract>().CallCmdOpenDoor(hit.transform.GetComponentInParent<Door>().gameObject);
+                    PlayerManager.localPlayer.GetComponent<PlayerInteract>().CallCmdOpenDoor(hit.transform.gameObject);
+                    /*moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+                    moves.CallCmdSyncData(0f, currentPos, 0f);
+
+                    moves.CallCmdSyncData(0f, currentPos, 0f);*/
+                    /*Door[] array2 = FindObjectsOfType<Door>();
+                    for (int i = 0; i < array2.Length; i++)
+                    {
+                        //if (array2[i] == interactable)
+                        if (Vector3.Distance(array2[i].transform.position, interactable.transform.position) < 3f)
+                        {
+                            Door door = array2[i];
+                            door.ChangeState();
+                            break;
+                        }
+                    }*/
+                }
+                //GUI.Label(new UnityEngine.Rect(500, 50, 500, 150), "SCP 179 item: DA, tag:" + hit.transform.gameObject.tag + " recognized as " + interactableType);
+                //GameObject door = (!(this.interactableType == "door")) ? GameObject.Find(this.interactable.name.Remove(this.interactable.name.IndexOf("-"))) : this.interactable;
+                //GameObject door = (!(this.interactableType == "door")) ? GameObject.Find(hit.transform.gameObject.name.Remove(hit.transform.gameObject.name.IndexOf("-"))) : hit.transform.gameObject;
+                PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().CallCmdOpenDoor(hit.transform.GetComponentInParent<Door>().gameObject);
+                PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().CallCmdOpenDoor(interactable);
+                //Door d = (Door) hit.transform.gameObject;
+                // interactable = this.hit.transform.GetComponentInParent<CCTV_Camera>().gameObject;
+            }
+            //else if (Physics.Raycast(this.cam.ScreenPointToRay(Input.mousePosition), out this.hit))
+            //else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+            else if (Physics.Raycast(new Ray(this.spectCam.position, this.spectCam.forward), out hit))
+            {
+                //GUI.Label(new UnityEngine.Rect(500, 50, 500, 150), "SCP 179 item: DA2");
+                interactable = hit.transform.gameObject;
+                interactableType = RecognizeInteractable();
+                PlayerManager.localPlayer.GetComponent<PlayerInteract>().CallCmdOpenDoor(hit.transform.GetComponentInParent<Door>().gameObject);
+                PlayerManager.localPlayer.GetComponent<PlayerInteract>().CallCmdOpenDoor(hit.transform.gameObject);
+                PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().CallCmdOpenDoor(hit.transform.GetComponentInParent<Door>().gameObject);
+                PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().CallCmdOpenDoor(interactable);
+            }
+            /*if (interactableType == "stop")
+            {
+                GUI.Label(new UnityEngine.Rect(600, 50, 500, 150), "SCP 179 item: STOP");
+                StopInteracting();
+            }*/
+        }
+
+        private string RecognizeInteractable()
+        {
+            string result = "unclassified";
+            if (interactable != null)
+            {
+                if (interactable.GetComponentInParent<Door>() != null || interactable.tag == "DoorButton" || interactable.tag == "Door")
+                {
+                    result = "door";
+                }
+                else if (interactable.tag == "CCTV")
+                {
+                    result = "cctv";
+                }
+                else if (interactable.tag == "LiftTarget")
+                {
+                    result = "lift";
+                }
+            }
+            return result;
+        }
+
+        public void StopInteracting()
+        {
+            interactable = null;
+            interactableType = "unclassified";
+        }
+
+        private void UpdateInteraction()
+        {
+            //CursorManager.is079 = false;
+            if (CursorManager.is079)
+            {
+                //this.cam.transform.SetParent(null);
+                CCTV_Camera[] array = UnityEngine.Object.FindObjectsOfType<CCTV_Camera>();
+                CCTV_Camera[] array2 = array;
+                for (int i = 0; i < array2.Length; i++)
+                {
+                    CCTV_Camera cCTV_Camera = array2[i];
+                    cCTV_Camera.UpdateLOD();
+                }
+            }
+            if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hit)) { 
+                GUI.Label(new UnityEngine.Rect(Screen.width / 2, Screen.height / 2, 500, 150), "Tag:" + hit.transform.gameObject.tag + " recognized as " + RecognizeInteractable() + " and name is: " + hit.transform.gameObject.name);
+            }
+            if (interactableType == "door" || interactableType == "sdoor")
+            {
+                GameObject arg_17D_0 = (!(interactableType == "door")) ? GameObject.Find(interactable.name.Remove(interactable.name.IndexOf("-"))) : interactable;
+                //this.gui.SetConsoleScreen(0);
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    this.Console_OpenDoor();
+                    this.StopInteracting();
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    this.Console_LockDoor();
+                    this.StopInteracting();
+                }
+            }
+            else if (this.interactableType == "cctv")
+            {
+                CCTV_Camera cCTV_Camera = this.hit.transform.GetComponent<CCTV_Camera>();
+                if (cCTV_Camera == null)
+                {
+                    cCTV_Camera = this.hit.transform.GetComponentInParent<CCTV_Camera>();
+                }
+                //this.cam.transform.position = cCTV_Camera.cameraTarget.position;
+                //this.curCamera = cCTV_Camera.gameObject;
+                this.liftID = cCTV_Camera.liftID;
+                //this.gui.liftButton.SetActive(this.liftID != string.Empty && !this.liftID.Contains("tesla"));
+                //this.gui.teslaButton.SetActive(this.liftID.Contains("tesla"));
+                //this.isHacked = false;
+                this.StopInteracting();
+                //this.RefreshCamerasLODs();
+            }
+            else if (this.interactableType == "lift")
+            {
+                CCTV_Camera[] array = UnityEngine.Object.FindObjectsOfType<CCTV_Camera>();
+                CCTV_Camera[] array2 = array;
+                for (int i = 0; i < array2.Length; i++)
+                {
+                    CCTV_Camera cCTV_Camera2 = array2[i];
+                    if (cCTV_Camera2.liftID.Contains(this.liftID.Remove(4)) && cCTV_Camera2.liftID != this.liftID)
+                    {
+                        //this.cam.transform.position = cCTV_Camera2.cameraTarget.position;
+                        this.liftID = cCTV_Camera2.liftID;
+                        //this.gui.liftButton.SetActive(this.liftID != string.Empty);
+                        //this.isHacked = false;
+                        this.StopInteracting();
+                        //this.RefreshCamerasLODs();
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void Console_OpenDoor()
+        {
+            if (this.interactableType == "door" || this.interactableType == "sdoor")
+            {
+                //Door door = (!(interactableType == "door")) ? GameObject.Find(interactable.name.Remove(interactable.name.IndexOf("-"))) : interactable;
+                //this.CallCmdOpenDoor(door);
+                // PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().CallCmdOpenDoor(door);
+                // (Door)door.ChangeState();
+                //Door d = door;
+                //d.ChangeState();
+            }
+        }
+
+        public void Console_LockDoor()
+        {
+            if (this.interactableType == "door" || (this.interactableType == "sdoor"))
+            {
+                GameObject door = (!(this.interactableType == "door")) ? GameObject.Find(this.interactable.name.Remove(this.interactable.name.IndexOf("-"))) : this.interactable;
+                //this.CallCmdLockDoor(door);
+                PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().remainingLockdown = 5f;
+                PlayerManager.localPlayer.GetComponent<Scp079PlayerScript>().CallCmdLockDoor(door);
+                /*this.gui.ability = 0f;
+                GameObject door = (!(this.interactableType == "door")) ? GameObject.Find(this.interactable.name.Remove(this.interactable.name.IndexOf("-"))) : this.interactable;
+                this.CallCmdLockDoor(door);
+                this.remainingLockdown = UnityEngine.Random.Range(this.minLockTime, this.maxLockTime);*/
+            }
         }
 
         private NetworkIdentity FindChaseTarget(int team, GameObject localPlayer)
@@ -305,6 +637,7 @@ namespace ExampleAssembly
             GUI.Label(new UnityEngine.Rect(10, 90, 500, 50), "Noclip: " + (isNoclip ? "ON" : "OFF"));
             // UnityEngine.GUI.Label(new UnityEngine.Rect(500, 30, 500, 50), "MUTE: " + (MUTE ? "ON" : "OFF"));
             GUI.Label(new UnityEngine.Rect(500, 30, 500, 50), "Menu: F5");
+            GUI.Label(new UnityEngine.Rect(500, 40, 500, 70), "SCP 179 interactable: " + interactableType); 
 
             Update();
             /*
