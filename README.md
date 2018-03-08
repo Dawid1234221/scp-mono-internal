@@ -3,6 +3,11 @@ Video (click):
 [![V0.9 VIDEO](https://img.youtube.com/vi/QCDzZ3vUBi0/0.jpg)](https://www.youtube.com/watch?v=QCDzZ3vUBi0)
 
 
+Video: How to compile (click):
+
+[![How to compile](https://img.youtube.com/vi/ls381bjXmf4/0.jpg)](https://www.youtube.com/watch?v=ls381bjXmf4)
+
+
 # Support
 
 I checked this only with Windows 10.
